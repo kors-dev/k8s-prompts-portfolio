@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-demo-app-storage
+  labels:
+    app: go-demo-app
+    component: storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-demo-app
+      component: storage
+  template:
+    metadata:
+      labels:
+        app: go-demo-app
+        component: storage
+    spec:
+      containers:
+      - name: app
+        image: nginx:1.27.0
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: app-data
+          mountPath: /data
+      volumes:
+      - name: app-data
+        persistentVolumeClaim:
+          claimName: app-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
