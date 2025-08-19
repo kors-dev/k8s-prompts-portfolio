@@ -4,7 +4,7 @@
 
 ## Generation Prompts
 
-| NAME | PROMPT (concise) | DESCRIPTION | EXAMPLE |
+| NAME | PROMPT | DESCRIPTION | EXAMPLE |
 |---|---|---|---|
 | app.yaml | Generate Deployment `go-demo-app` (2 replicas, nginx:1.27.0 on 8080) + ClusterIP Service (80→8080). | Base app + service. | [yaml/app.yaml](./yaml/app.yaml) |
 | app-livenessProbe.yaml | Add HTTP livenessProbe on `/live` (10s delay/period) to Deployment `go-demo-app-liveness`. | Crash detection & restart. | [yaml/app-livenessProbe.yaml](./yaml/app-livenessProbe.yaml) |
