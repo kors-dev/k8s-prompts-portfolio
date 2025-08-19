@@ -1,41 +1,39 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: go-demo-app-storage
-  labels:
-    app: go-demo-app
-    component: storage
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: go-demo-app
-      component: storage
-  template:
-    metadata:
-      labels:
-        app: go-demo-app
-        component: storage
-    spec:
-      containers:
-      - name: app
-        image: nginx:1.27.0
-        ports:
-        - containerPort: 8080
-        volumeMounts:
-        - name: app-data
-          mountPath: /data
-      volumes:
-      - name: app-data
-        persistentVolumeClaim:
-          claimName: app-data
----
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: Pod
 metadata:
-  name: app-data
+  name: app-volume
 spec:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: 1Gi
+  containers:
+    - image: gcr.io/kuar-demo/kuard-amd64:1
+      name: app
+ 
+      livenessProbe:
+        httpGet:
+          path: /healthy
+          port: 8080
+        initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        failureThreshold: 3
+ 
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 8080
+        periodSeconds: 2
+        initialDelaySeconds: 0
+        failureThreshold: 3
+        successThreshold: 1
+      
+      ports:
+        - containerPort: 8080
+          name: http
+ 
+      volumeMounts:
+      - mountPath: "/data"
+        name: "data"     
+    
+  volumes:
+    - name: "data"
+      hostPath:
+        path: "/var/lib/app"

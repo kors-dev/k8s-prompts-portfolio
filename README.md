@@ -4,17 +4,17 @@
 
 ## Generation Prompts
 
-| NAME | PROMPT | DESCRIPTION | EXAMPLE |
-|---|---|---|---|
-| app.yaml | Generate Deployment `go-demo-app` (2 replicas, nginx:1.27.0 on 8080) + ClusterIP Service (80→8080). | Base app + service. | [yaml/app.yaml](./yaml/app.yaml) |
-| app-livenessProbe.yaml | Add HTTP livenessProbe on `/live` (10s delay/period) to Deployment `go-demo-app-liveness`. | Crash detection & restart. | [yaml/app-livenessProbe.yaml](./yaml/app-livenessProbe.yaml) |
-| app-readinessProbe.yaml | Add HTTP readinessProbe on `/ready` (5s delay) to Deployment `go-demo-app-readiness`. | Traffic gating until ready. | [yaml/app-readinessProbe.yaml](./yaml/app-readinessProbe.yaml) |
-| app-volumeMounts.yaml | Mount PVC `app-data` at `/data` in Deployment `go-demo-app-storage`; include PVC 1Gi RWO. | Persistent storage example. | [yaml/app-volumeMounts.yaml](./yaml/app-volumeMounts.yaml) |
-| app-cronjob.yaml | Nightly CronJob `db-backup` at `0 3 * * *` using busybox; forbid concurrency. | Scheduled task pattern. | [yaml/app-cronjob.yaml](./yaml/app-cronjob.yaml) |
-| app-job.yaml | One-off Job `one-off-migration` using busybox; restartPolicy Never; backoffLimit 1. | Batch task example. | [yaml/app-job.yaml](./yaml/app-job.yaml) |
-| app-multicontainer.yaml | Pod with `app` + `log-tailer` sharing `emptyDir` at /var/log; tail file. | Sidecar logging pattern. | [yaml/app-multicontainer.yaml](./yaml/app-multicontainer.yaml) |
-| app-resources.yaml | Deployment with requests: 100m/128Mi, limits: 500m/256Mi. | Resource governance. | [yaml/app-resources.yaml](./yaml/app-resources.yaml) |
-| app-secret-env.yaml | Secret `app-secret` + Deployment consuming via `envFrom.secretRef`. | Config via Secret env. | [yaml/app-secret-env.yaml](./yaml/app-secret-env.yaml) |
+| NAME                | PROMPT                                                                                         | DESCRIPTION                                    | EXAMPLE                           |
+|---------------------|------------------------------------------------------------------------------------------------|------------------------------------------------|-----------------------------------|
+| Secret Env          | Generate a Kubernetes Secret manifest with environment variables for my app                    | Create a Secret resource to store environment variables | [app-secret-env.yaml](./yaml/app-secret-env.yaml) |
+| Volume Mounts       | Create a Deployment manifest with volume mounts for persistent data                            | Define volume mounts in a Pod to persist data   | [app-volumeMounts.yaml](./yaml/app-volumeMounts.yaml) |
+| Basic Deployment    | Generate a simple Kubernetes Deployment manifest for an app with port 8080                     | A basic Deployment exposing port 8080           | [app.yaml](./yaml/app.yaml) |
+| CronJob             | Generate a Kubernetes CronJob manifest that runs every day at midnight                         | Automate task execution on a schedule           | [app-cronjob.yaml](./yaml/app-cronjob.yaml) |
+| Job                 | Generate a Kubernetes Job manifest that runs a script once                                     | One-time task execution using a Job resource    | [app-job.yaml](./yaml/app-job.yaml) |
+| Liveness Probe      | Add a livenessProbe to a container checking /healthy on port 8080                              | Health check to restart containers when needed  | [app-livenessProbe.yaml](./yaml/app-livenessProbe.yaml) |
+| Multi-Container Pod | Create a Kubernetes Pod with two containers sharing a volume                                   | Define a Pod with multiple containers sharing a volume | [app-multicontainer.yaml](./yaml/app-multicontainer.yaml) |
+| Readiness Probe     | Add a readinessProbe checking /ready on port 8080                                              | Check container readiness before serving traffic | [app-readinessProbe.yaml](./yaml/app-readinessProbe.yaml) |
+| Resources           | Add resource requests and limits for CPU and memory to a container                             | Control CPU and memory resource allocation      | [app-resources.yaml](./yaml/app-resources.yaml) |
 
 Full prompts live under [`/prompts`](./prompts).
 

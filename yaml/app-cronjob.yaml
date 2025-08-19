@@ -1,23 +1,15 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: db-backup
-  labels:
-    app: go-demo-app
-    component: backup
+  name: app-cronjob
 spec:
-  schedule: "0 3 * * *"
-  concurrencyPolicy: Forbid
-  startingDeadlineSeconds: 120
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 1
+  schedule: "*/5 * * * *"
   jobTemplate:
     spec:
-      backoffLimit: 2
       template:
         spec:
-          restartPolicy: OnFailure
           containers:
-          - name: backup
-            image: busybox:1.36
-            command: ["sh","-c","echo $(date) backup started && sleep 10 && echo done"]
+            - name: hello
+              image: bash
+              command: ["echo",  "Hello world"]
+          restartPolicy: OnFailure

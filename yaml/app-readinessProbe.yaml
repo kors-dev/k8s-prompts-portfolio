@@ -1,32 +1,30 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: go-demo-app-readiness
-  labels:
-    app: go-demo-app
-    component: readiness
+  name: app-readinessprob
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: go-demo-app
-      component: readiness
-  template:
-    metadata:
-      labels:
-        app: go-demo-app
-        component: readiness
-    spec:
-      containers:
-      - name: app
-        image: nginx:1.27.0
-        ports:
-        - containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 2
-          failureThreshold: 3
+  containers:
+    - image: gcr.io/smartcity-gl/harmonic:v2.0.2
+      name: app
+
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 8000
+        initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        failureThreshold: 3
+
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 8000
+        periodSeconds: 2
+        initialDelaySeconds: 0
+        failureThreshold: 3
+        successThreshold: 1
+        
+      ports:
+        - containerPort: 8000
+          name: http
